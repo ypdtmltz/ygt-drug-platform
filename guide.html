@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全角色操作指南 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .tabs{display:flex;gap:0;flex-wrap:wrap;margin-bottom:20px;border-bottom:2px solid var(--blue)}
+        .tab{padding:11px 26px;background:#fff;border:1px solid var(--line);border-bottom:none;border-radius:3px 3px 0 0;font-size:14.5px;font-weight:600;cursor:pointer;color:#3a4a5f;transition:.15s;margin-right:4px}
+        .tab:hover{color:var(--blue);background:var(--blue-light)}
+        .tab.active{background:var(--blue);color:#fff;border-color:var(--blue);position:relative}
+        .tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--blue)}
+        .role-panel{display:none}
+        .role-panel.show{display:block}
+        .role-head{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:var(--radius);padding:18px 22px;margin-bottom:18px}
+        .role-head h3{font-family:var(--serif);font-size:19px;color:var(--blue-deep);margin-bottom:6px}
+        .role-head p{color:var(--muted);font-size:13.5px}
+        .flow{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:18px}
+        .flow h4{font-size:16px;color:var(--blue-deep);margin-bottom:14px;padding-left:10px;border-left:4px solid var(--red)}
+        .step-line{position:relative;padding:0 0 4px 26px}
+        .step-line::before{content:"";position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:var(--line)}
+        .step{position:relative;margin-bottom:16px}
+        .step::before{content:attr(data-n);position:absolute;left:-26px;top:2px;width:22px;height:22px;border-radius:2px;background:var(--blue);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+        .step b{display:block;font-size:15px;color:var(--text)}
+        .step span{font-size:13.5px;color:var(--muted)}
+        .chip{display:inline-block;background:var(--blue-light);color:var(--blue);border-radius:2px;padding:1px 8px;font-size:12.5px;margin-left:6px}
+    </style>
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-right">
+                <div class="searchbox">
+                    <input type="text" placeholder="请输入药品名称 / 批准文号检索">
+                    <button type="button">检索</button>
+                </div>
+                <div class="header-actions">
+                    <a href="guide.html">操作指南</a>
+                    <a class="login-btn" href="login.html">用户登录</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html">首页</a>
+            <a href="dashboard.html">我的工作台</a>
+            <a href="drug-manage.html">药品目录动态管理</a>
+            <a href="prescription.html">处方流转与权限协同</a>
+            <a href="chronic-service.html">慢病用药便民服务</a>
+            <a href="effect.html">政策成效</a>
+        </div>
+    </nav>
+
+    <!-- 内页横幅 -->
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <h1>全角色操作指南</h1>
+            <p>按使用角色查看平台操作流程：村医、县级药剂科、县级医生、患者与家属，各自用平台解决什么、怎么点。</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="crumb">
+            <a href="index.html">首页</a><span class="sep">&gt;</span><span>全角色操作指南</span>
+        </div>
+
+        <div class="tabs" style="margin-top:20px">
+            <div class="tab active" onclick="switchRole(this,'cunyi')">村医</div>
+            <div class="tab" onclick="switchRole(this,'yaoji')">县级药剂科</div>
+            <div class="tab" onclick="switchRole(this,'ysheng')">县级医生</div>
+            <div class="tab" onclick="switchRole(this,'huanzhe')">患者 · 家属</div>
+        </div>
+
+        <!-- 村医 -->
+        <div class="role-panel show" id="cunyi">
+            <div class="role-head">
+                <h3>村医：缺药上报 · 处方调配 · 续方代办</h3>
+                <p>村医是平台最常用的入口，手机或电脑均可操作，重点是"缺药一键报"和"帮患者续方"。</p>
+            </div>
+            <div class="flow">
+                <h4>场景一：缺药上报</h4>
+                <div class="step-line">
+                    <div class="step" data-n="1"><b>进入「药品目录动态管理」</b><span>在首页点击该功能卡片，或顶部导航进入。</span></div>
+                    <div class="step" data-n="2"><b>填写缺药上报表单</b><span>输入药品名称、厂家、需求原因、覆盖患者人数，注明有无替代药。</span></div>
+                    <div class="step" data-n="3"><b>点击"提交上报至数据库"</b><span>数据即时进入县级审核清单，无需红头文件逐级上报。</span></div>
+                </div>
+            </div>
+            <div class="flow">
+                <h4>场景二：帮患者续方</h4>
+                <div class="step-line">
+                    <div class="step" data-n="1"><b>接收用药提醒</b><span>系统在患者药品用完前7天自动推送续方提醒。</span></div>
+                    <div class="step" data-n="2"><b>进入「慢病用药便民服务」</b><span>在续方提醒列表找到对应患者。</span></div>
+                    <div class="step" data-n="3"><b>点击"一键申请续方"</b><span>县级医生远程审核通过后处方即生效，随后配送至村。</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 县级药剂科 -->
+        <div class="role-panel" id="yaoji">
+            <div class="role-head">
+                <h3>县级药剂科：在线审核 · 目录动态调整</h3>
+                <p>药剂科负责审核全县缺药申报，用客观数据替代人工经验判断。</p>
+            </div>
+            <div class="flow">
+                <h4>操作流程</h4>
+                <div class="step-line">
+                    <div class="step" data-n="1"><b>进入「药品目录动态管理」→"在线审核"</b><span>系统已按需求紧迫度汇总全县申报。</span></div>
+                    <div class="step" data-n="2"><b>查看每项申报</b><span>直接看到药品名称、上报机构、申报人数、有无替代药。</span></div>
+                    <div class="step" data-n="3"><b>点击"通过"或"驳回"</b><span>驳回需填写理由；通过后药品自动进入可采购目录。</span></div>
+                    <div class="step" data-n="4"><b>查看"已通过药品目录"</b><span>目录实时更新，各基层机构可立即采购。</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 县级医生 -->
+        <div class="role-panel" id="ysheng">
+            <div class="role-head">
+                <h3>县级医生：电子开方 · 远程续方审核 · 下发授权</h3>
+                <p>县级医生是处方流转的起点，也是续方审核和权限授权的决策方。</p>
+            </div>
+            <div class="flow">
+                <h4>操作流程</h4>
+                <div class="step-line">
+                    <div class="step" data-n="1"><b>进入「处方流转与权限协同」</b><span>在"县级医生开方"模块填写患者、药品、用量、配送地点。</span></div>
+                    <div class="step" data-n="2"><b>勾选"允许基层取药"</b><span>处方自动流转至患者所在乡镇卫生院/村卫生室。</span></div>
+                    <div class="step" data-n="3"><b>远程审核续方申请</b><span>对村医提交的稳定期慢病续方在线审批。</span></div>
+                    <div class="step" data-n="4"><b>下发临时续方授权</b><span>在"续方临时授权管理"中设置授权范围与有效期，到期自动收回。</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 患者家属 -->
+        <div class="role-panel" id="huanzhe">
+            <div class="role-head">
+                <h3>患者 · 家属：就近取药 · 送药上门 · 免跑县城</h3>
+                <p>患者和家属无需操作复杂系统，只需接收提醒、就近取药或等待送药上门。</p>
+            </div>
+            <div class="flow">
+                <h4>体验流程</h4>
+                <div class="step-line">
+                    <div class="step" data-n="1"><b>接收用药提醒</b><span>药品用完前7天，患者/家属微信收到续方提醒。</span></div>
+                    <div class="step" data-n="2"><b>确认续方</b><span>由村医代办线上续方，或电话告知村医即可。</span></div>
+                    <div class="step" data-n="3"><b>就近取药 / 上门送药</b><span>到村卫生室取药报销，行动不便老人由村医送药上门。</span></div>
+                    <div class="step" data-n="4"><b>跟踪配送</b><span>在"中心药房定向配送"进度条查看药品位置。</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="prescription.html">处方流转与权限协同</a>
+                <a href="chronic-service.html">慢病用药便民服务</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <script src="drugs-data.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function switchRole(btn, id){
+            document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+            btn.classList.add("active");
+            document.querySelectorAll(".role-panel").forEach(p=>p.classList.remove("show"));
+            document.getElementById(id).classList.add("show");
+        }
+    </script>
+</body>
+</html>
