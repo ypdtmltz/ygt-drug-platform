@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作台 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-actions">
+                <a href="guide.html">操作指南</a>
+                <a href="index.html">返回首页</a>
+                <a class="login-btn" href="javascript:void(0)" onclick="logout()">退出登录</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html">首页</a>
+            <a href="dashboard.html" class="active">我的工作台</a>
+            <a href="drug-manage.html">药品目录动态管理</a>
+            <a href="prescription.html">处方流转与权限协同</a>
+            <a href="chronic-service.html">慢病用药便民服务</a>
+            <a href="effect.html">政策成效</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="crumb">
+            <a href="index.html">首页</a><span class="sep">&gt;</span><a href="dashboard.html">工作台</a>
+            <span class="sep">&gt;</span><span id="crumbRole">工作台首页</span>
+        </div>
+    </div>
+
+    <!-- 工作台布局：左侧菜单 + 内容区 -->
+    <div class="workbench">
+        <aside class="wb-side">
+            <div class="wb-user">
+                <div class="avatar" id="wbAvatar">医</div>
+                <b id="wbName">演示用户</b>
+                <span id="wbRole">参保群众</span>
+            </div>
+            <nav class="wb-menu" id="wbMenu"></nav>
+        </aside>
+        <main class="wb-main">
+            <div class="wb-title">
+                <h2 id="wbTitle">工作台首页</h2>
+                <span class="date" id="wbDate"></span>
+            </div>
+            <div id="wbContent"></div>
+        </main>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="prescription.html">处方流转与权限协同</a>
+                <a href="chronic-service.html">慢病用药便民服务</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script>
+        var ROLE_NAMES = { public: '参保群众', village: '村医', county: '县级医生', pharmacy: '县药剂科' };
+        var AVATAR = { public: '众', village: '医', county: '医', pharmacy: '药' };
+
+        // 各角色工作台配置
+        var CONFIG = {
+            village: {
+                title: '村医工作台 · 郭吴村卫生室',
+                menus: [
+                    { t: '待办与提醒', group: true },
+                    { label: '工作台首页', action: 'home', active: true },
+                    { label: '缺药上报', href: 'drug-manage.html' },
+                    { label: '慢病档案与续方', href: 'chronic-service.html' },
+                    { label: '处方流转与调配', href: 'prescription.html' },
+                    { t: '公共服务', group: true },
+                    { label: '全角色操作指南', href: 'guide.html' },
+                    { label: '政策成效', href: 'effect.html' }
+                ],
+                home:
+                    '<div class="kpi-row">' +
+                    '<div class="kpi red"><div class="k-n">3</div><div class="k-l">待办续方提醒</div></div>' +
+                    '<div class="kpi amber"><div class="k-n">2</div><div class="k-l">待审缺药申报</div></div>' +
+                    '<div class="kpi"><div class="k-n">28</div><div class="k-l">本月慢病随访</div></div>' +
+                    '<div class="kpi teal"><div class="k-n">126</div><div class="k-l">覆盖用药患者（人）</div></div>' +
+                    '</div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>待办事项</h3><a class="more" href="chronic-service.html">进入办理 &gt;</a></div>' +
+                    '<div class="panel-body"><ul class="todo-list">' +
+                    '<li><span class="dot"></span><span class="txt">张某某（心脏支架术后）氯吡格雷片剩余 3 天，需申请续方</span><span class="time">2026-08-14</span><span class="act"><a href="chronic-service.html">去办理</a></span></li>' +
+                    '<li><span class="dot"></span><span class="txt">李某某（原发性高血压）厄贝沙坦片剩余 6 天，临近缺药</span><span class="time">2026-08-14</span><span class="act"><a href="chronic-service.html">去办理</a></span></li>' +
+                    '<li><span class="dot"></span><span class="txt">村卫生室苯磺酸氨氯地平片库存不足，需缺药申报</span><span class="time">2026-08-12</span><span class="act"><a href="drug-manage.html">去申报</a></span></li>' +
+                    '<li><span class="dot ok"></span><span class="txt">阿托伐他汀钙片缺药申报已审核通过，可采购</span><span class="time">2026-08-10</span><span class="act"><a href="drug-manage.html">查看</a></span></li>' +
+                    '</ul></div></div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>快捷办理</h3></div>' +
+                    '<div class="panel-body"><div class="quick-grid">' +
+                    '<a class="quick-item" href="drug-manage.html"><span class="q-ic">报</span><b>缺药上报</b><span>线上提交需求</span></a>' +
+                    '<a class="quick-item" href="chronic-service.html"><span class="q-ic">档</span><b>慢病档案</b><span>建档与续方</span></a>' +
+                    '<a class="quick-item" href="prescription.html"><span class="q-ic">方</span><b>处方调配</b><span>接收县级处方</span></a>' +
+                    '<a class="quick-item" href="guide.html"><span class="q-ic">导</span><b>操作指南</b><span>查看使用说明</span></a>' +
+                    '</div></div></div>'
+            },
+            county: {
+                title: '县级医生工作台 · 夏河县人民医院',
+                menus: [
+                    { t: '诊疗服务', group: true },
+                    { label: '工作台首页', action: 'home', active: true },
+                    { label: '电子开方', href: 'prescription.html' },
+                    { label: '续方远程审核', href: 'prescription.html' },
+                    { label: '慢病授权管理', href: 'prescription.html' },
+                    { t: '公共服务', group: true },
+                    { label: '全角色操作指南', href: 'guide.html' },
+                    { label: '政策成效', href: 'effect.html' }
+                ],
+                home:
+                    '<div class="kpi-row">' +
+                    '<div class="kpi red"><div class="k-n">5</div><div class="k-l">待审续方申请</div></div>' +
+                    '<div class="kpi"><div class="k-n">12</div><div class="k-l">本月流转处方</div></div>' +
+                    '<div class="kpi amber"><div class="k-n">2</div><div class="k-l">临期授权（7天内到期）</div></div>' +
+                    '<div class="kpi teal"><div class="k-n">86</div><div class="k-l">累计服务患者</div></div>' +
+                    '</div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>待办事项</h3><a class="more" href="prescription.html">进入办理 &gt;</a></div>' +
+                    '<div class="panel-body"><ul class="todo-list">' +
+                    '<li><span class="dot"></span><span class="txt">郭吴村刘村医提交：张某某（氯吡格雷片）续方申请待审核</span><span class="time">2026-08-14</span><span class="act"><a href="prescription.html">去审核</a></span></li>' +
+                    '<li><span class="dot"></span><span class="txt">黑力巴村王医师提交：李某某（厄贝沙坦片）续方申请待审核</span><span class="time">2026-08-13</span><span class="act"><a href="prescription.html">去审核</a></span></li>' +
+                    '<li><span class="dot"></span><span class="txt">授权「心脏支架术后·刘医生」有效期临近，请及时续签或收回</span><span class="time">2026-08-12</span><span class="act"><a href="prescription.html">去处理</a></span></li>' +
+                    '<li><span class="dot ok"></span><span class="txt">今日已完成 3 份电子处方流转</span><span class="time">2026-08-14</span><span class="act"><a href="prescription.html">查看</a></span></li>' +
+                    '</ul></div></div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>快捷办理</h3></div>' +
+                    '<div class="panel-body"><div class="quick-grid">' +
+                    '<a class="quick-item" href="prescription.html"><span class="q-ic">方</span><b>电子开方</b><span>开具并流转</span></a>' +
+                    '<a class="quick-item" href="prescription.html"><span class="q-ic">审</span><b>续方审核</b><span>远程审批</span></a>' +
+                    '<a class="quick-item" href="prescription.html"><span class="q-ic">权</span><b>授权管理</b><span>续方授权</span></a>' +
+                    '<a class="quick-item" href="guide.html"><span class="q-ic">导</span><b>操作指南</b><span>查看使用说明</span></a>' +
+                    '</div></div></div>'
+            },
+            pharmacy: {
+                title: '县药剂科工作台 · 夏河县人民医院',
+                menus: [
+                    { t: '药品管理', group: true },
+                    { label: '工作台首页', action: 'home', active: true },
+                    { label: '缺药申报审核', href: 'drug-manage.html' },
+                    { label: '药品目录管理', href: 'drug-manage.html' },
+                    { label: '需求数据看板', href: 'drug-manage.html' },
+                    { t: '公共服务', group: true },
+                    { label: '全角色操作指南', href: 'guide.html' },
+                    { label: '政策成效', href: 'effect.html' }
+                ],
+                home:
+                    '<div class="kpi-row">' +
+                    '<div class="kpi red"><div class="k-n">2</div><div class="k-l">待审缺药申报</div></div>' +
+                    '<div class="kpi"><div class="k-n">14</div><div class="k-l">在库药品品种</div></div>' +
+                    '<div class="kpi amber"><div class="k-n">215</div><div class="k-l">申报覆盖患者（人）</div></div>' +
+                    '<div class="kpi teal"><div class="k-n">32</div><div class="k-l">接入村卫生室</div></div>' +
+                    '</div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>待审缺药申报</h3><a class="more" href="drug-manage.html">进入审核 &gt;</a></div>' +
+                    '<div class="panel-body"><ul class="todo-list">' +
+                    '<li><span class="dot"></span><span class="txt">苯磺酸氨氯地平片（无合适替代药）· 郭吴村卫生室 · 126人</span><span class="time">2026-08-12</span><span class="act"><a href="drug-manage.html">去审核</a></span></li>' +
+                    '<li><span class="dot"></span><span class="txt">阿托伐他汀钙片（有同类替代药）· 黑力巴村卫生室 · 89人</span><span class="time">2026-08-11</span><span class="act"><a href="drug-manage.html">去审核</a></span></li>' +
+                    '<li><span class="dot ok"></span><span class="txt">二甲双胍缓释片审核通过，已进入采购目录</span><span class="time">2026-08-09</span><span class="act"><a href="drug-manage.html">查看</a></span></li>' +
+                    '</ul></div></div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>快捷办理</h3></div>' +
+                    '<div class="panel-body"><div class="quick-grid">' +
+                    '<a class="quick-item" href="drug-manage.html"><span class="q-ic">审</span><b>在线审核</b><span>缺药申报</span></a>' +
+                    '<a class="quick-item" href="drug-manage.html"><span class="q-ic">目</span><b>目录管理</b><span>动态调整</span></a>' +
+                    '<a class="quick-item" href="drug-manage.html"><span class="q-ic">看</span><b>数据看板</b><span>需求分析</span></a>' +
+                    '<a class="quick-item" href="guide.html"><span class="q-ic">导</span><b>操作指南</b><span>查看使用说明</span></a>' +
+                    '</div></div></div>'
+            },
+            public: {
+                title: '个人服务大厅 · 参保群众',
+                menus: [
+                    { t: '我的服务', group: true },
+                    { label: '我的慢病档案', action: 'home', active: true },
+                    { label: '取药进度查询', action: 'delivery' },
+                    { t: '信息资讯', group: true },
+                    { label: '政策文件', action: 'policy' },
+                    { label: '通知公告', action: 'notice' },
+                    { label: '便民服务指南', href: 'guide.html' }
+                ],
+                home:
+                    '<div class="kpi-row">' +
+                    '<div class="kpi"><div class="k-n">2</div><div class="k-l">建档慢病</div></div>' +
+                    '<div class="kpi teal"><div class="k-n">1</div><div class="k-l">待取药品</div></div>' +
+                    '<div class="kpi amber"><div class="k-n">7</div><div class="k-l">本年度取药次数</div></div>' +
+                    '<div class="kpi"><div class="k-n">93%</div><div class="k-l">医保报销比例</div></div>' +
+                    '</div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>我的慢病档案</h3><a class="more" href="chronic-service.html">查看详情 &gt;</a></div>' +
+                    '<div class="panel-body"><table class="data">' +
+                    '<thead><tr><th>序号</th><th>慢病类型</th><th>用药方案</th><th>上次取药</th><th>包干村医</th></tr></thead>' +
+                    '<tbody><tr><td>1</td><td>冠心病/心脏支架术后</td><td>氯吡格雷 75mg 每日1次</td><td>2026-08-01</td><td>郭吴村刘村医</td></tr>' +
+                    '<tr><td>2</td><td>原发性高血压</td><td>厄贝沙坦 150mg 每日1次</td><td>2026-07-20</td><td>郭吴村刘村医</td></tr></tbody></table></div></div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>取药进度</h3><a class="more" href="chronic-service.html">查看详情 &gt;</a></div>' +
+                    '<div class="panel-body"><div class="trace-block"><b>氯吡格雷片</b>：中心药房已出库，正在配送至郭吴村卫生室，预计 2026-08-15 送达。</div></div></div>' +
+                    '<div class="panel">' +
+                    '<div class="panel-head"><h3>政策文件</h3><a class="more" href="javascript:void(0)">更多 &gt;</a></div>' +
+                    '<div class="panel-body"><ul class="todo-list">' +
+                    '<li><span class="txt">《国家基本药物目录（2026年版）》</span><span class="time">2026-06</span></li>' +
+                    '<li><span class="txt">紧密型县域医共体建设实施方案</span><span class="time">2025-12</span></li>' +
+                    '<li><span class="txt">处方流转与医保结算衔接工作规范</span><span class="time">2026-03</span></li>' +
+                    '</ul></div></div>'
+            }
+        };
+
+        var PANELS = {
+            delivery: '<div class="panel"><div class="panel-head"><h3>取药进度查询</h3></div><div class="panel-body">' +
+                '<div class="progress-steps"><div class="ps done"><div class="dot">1</div><div class="txt">已出库</div></div><div class="ps done"><div class="dot">2</div><div class="txt">运输中</div></div><div class="ps active"><div class="dot">3</div><div class="txt">到达村卫生室</div></div><div class="ps"><div class="dot">4</div><div class="txt">取药/上门送达</div></div></div>' +
+                '<div class="trace-block mt-18"><b>当前状态：</b>药品已到达郭吴村卫生室，可前往取药；行动不便可联系村医上门送达（刘村医 0931-8880***）。</div></div></div>',
+            policy: '<div class="panel"><div class="panel-head"><h3>政策文件</h3></div><div class="panel-body"><table class="data"><thead><tr><th>序号</th><th>文件名称</th><th>文号/日期</th><th>操作</th></tr></thead><tbody>' +
+                '<tr><td>1</td><td>《国家基本药物目录（2026年版）》</td><td>2026-06</td><td><a href="https://www.gov.cn/zhengce/zhengceku/202607/content_7074868.htm" target="_blank" rel="noopener">查看原文</a></td></tr>' +
+                '<tr><td>2</td><td>基本药物使用考核有关要求（“986”口径解读）</td><td>2026-07</td><td><a href="https://www.nhc.gov.cn/yaozs/c100098/new_list.shtml" target="_blank" rel="noopener">查看原文</a></td></tr>' +
+                '<tr><td>3</td><td>紧密型县域医共体建设实施方案</td><td>2025-12</td><td><a href="https://www.gov.cn/zhengce/zhengceku/202312/content_6923447.htm" target="_blank" rel="noopener">查看原文</a></td></tr>' +
+                '<tr><td>4</td><td>处方流转与医保结算衔接工作规范</td><td>2026-03</td><td><a href="https://www.nhsa.gov.cn/" target="_blank" rel="noopener">查看原文</a></td></tr>' +
+                '</tbody></table></div></div>',
+            notice: '<div class="panel"><div class="panel-head"><h3>通知公告</h3></div><div class="panel-body"><ul class="todo-list">' +
+                '<li><span class="txt">关于开展2026年度基层药品目录动态调整工作的通知</span><span class="time">2026-08-10</span></li>' +
+                '<li><span class="txt">关于慢病长处方续方权限管理规范的说明</span><span class="time">2026-08-05</span></li>' +
+                '<li><span class="txt">县药械供应保障中心药品配送工作提示</span><span class="time">2026-07-28</span></li>' +
+                '<li><span class="txt">关于规范村卫生室缺药申报流程的通知</span><span class="time">2026-07-15</span></li>' +
+                '</ul></div></div>'
+        };
+
+        function renderDashboard() {
+            var role = null, name = null;
+            try { role = localStorage.getItem('ygt_role'); name = localStorage.getItem('ygt_name'); } catch (e) {}
+            if (!role) { role = new URLSearchParams(location.search).get('role'); name = new URLSearchParams(location.search).get('name'); }
+            if (!role || !CONFIG[role]) { location.href = 'login.html'; return; }
+            try { localStorage.setItem('ygt_role', role); if (name) localStorage.setItem('ygt_name', name); } catch (e) {}
+            name = name || '演示用户';
+            var cfg = CONFIG[role];
+
+            document.getElementById('wbName').textContent = name;
+            document.getElementById('wbRole').textContent = ROLE_NAMES[role];
+            document.getElementById('wbAvatar').textContent = AVATAR[role];
+            document.getElementById('wbTitle').textContent = cfg.title;
+            document.getElementById('crumbRole').textContent = '工作台首页';
+
+            // 日期
+            var d = new Date(), w = ['日','一','二','三','四','五','六'];
+            document.getElementById('wbDate').textContent = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日 星期' + w[d.getDay()];
+
+            // 菜单
+            var menuHtml = '';
+            cfg.menus.forEach(function (m) {
+                if (m.group) { menuHtml += '<div class="group">' + m.t + '</div>'; }
+                else if (m.href) {
+                    menuHtml += '<a href="' + m.href + '"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>' + m.label + '</a>';
+                } else {
+                    menuHtml += '<a href="javascript:void(0)" data-action="' + m.action + '"' + (m.active ? ' class="active"' : '') + '><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>' + m.label + '</a>';
+                }
+            });
+            document.getElementById('wbMenu').innerHTML = menuHtml;
+
+            // 内容
+            document.getElementById('wbContent').innerHTML = cfg.home;
+
+            // 菜单点击（action 型）
+            document.getElementById('wbMenu').addEventListener('click', function (e) {
+                var a = e.target.closest('a[data-action]');
+                if (!a) return;
+                var action = a.dataset.action;
+                document.querySelectorAll('#wbMenu a').forEach(function (x) { x.classList.remove('active'); });
+                a.classList.add('active');
+                var labels = { home: '工作台首页', delivery: '取药进度查询', policy: '政策文件', notice: '通知公告' };
+                document.getElementById('wbTitle').textContent = labels[action] || '工作台首页';
+                document.getElementById('crumbRole').textContent = labels[action] || '工作台首页';
+                document.getElementById('wbContent').innerHTML = (action === 'home') ? cfg.home : (PANELS[action] || cfg.home);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderDashboard);
+    </script>
+</body>
+</html>
