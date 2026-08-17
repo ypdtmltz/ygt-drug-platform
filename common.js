@@ -60,6 +60,19 @@
         }
     }
 
+    /* 按角色过滤后，对仍可见的功能模块重新编号（1、2、3…），避免隐藏部分模块后出现跳号 */
+    function renumberModules() {
+        var n = 0;
+        document.querySelectorAll('.module').forEach(function (m) {
+            if (getComputedStyle(m).display === 'none') return;
+            var badge = m.querySelector('.step-no');
+            if (badge && /^\d+$/.test(badge.textContent.trim())) {
+                n++;
+                badge.textContent = n;
+            }
+        });
+    }
+
     /* ---------- 顶部日期 ---------- */
     function renderDate() {
         var d = new Date(), w = ['日', '一', '二', '三', '四', '五', '六'];
@@ -332,6 +345,7 @@
         renderDate();
         renderUser();
         applyRoleAccess();
+        renumberModules();
         bindSearch();
         // 检索框提示语：支持通用名 / 商品名 / 别名
         var si = document.querySelector('.searchbox input');
