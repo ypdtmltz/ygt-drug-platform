@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>处方流转与权限协同 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-right">
+                <div class="searchbox">
+                    <input type="text" placeholder="请输入药品名称 / 批准文号检索">
+                    <button type="button">检索</button>
+                </div>
+                <div class="header-actions">
+                    <a href="guide.html">操作指南</a>
+                    <a class="login-btn" href="login.html">用户登录</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html">首页</a>
+            <a href="dashboard.html">我的工作台</a>
+            <a href="drug-manage.html">药品目录动态管理</a>
+            <a href="prescription.html" class="active">处方流转与权限协同</a>
+            <a href="chronic-service.html">慢病用药便民服务</a>
+            <a href="effect.html">政策成效</a>
+        </div>
+    </nav>
+
+    <!-- 内页横幅 -->
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <h1>处方流转与权限协同</h1>
+            <p>打通县—乡—村三级电子处方流转通道，实现"上级诊断、基层取药、医保结算"的处方闭环管理，配套临时授权与追溯机制保障用药安全。</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="crumb">
+            <a href="index.html">首页</a><span class="sep">&gt;</span><span>处方流转与权限协同</span>
+        </div>
+
+        <!-- 功能1 流转处方 -->
+        <div class="module">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">1</span>
+                    <h3>流转处方查询 <span class="sub">可按配送状态筛选，点击"确认配送"推动处方流转</span></h3>
+                </div>
+                <div class="toolbar" id="filterBar">
+                    <button class="btn ghost sm active" onclick="setFilter('全部')">全部</button>
+                    <button class="btn ghost sm" onclick="setFilter('待配送')">待配送</button>
+                    <button class="btn ghost sm" onclick="setFilter('配送中')">配送中</button>
+                    <button class="btn ghost sm" onclick="setFilter('已送达')">已送达</button>
+                </div>
+                <table class="data" id="rxTable">
+                    <thead><tr><th>序号</th><th>药品名称</th><th>单次用量</th><th>存放地点</th><th>配送状态</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 功能2 县级医生开方（县级医生权限） -->
+        <div class="module" data-roles="county">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">2</span>
+                    <h3>县级医生开方 <span class="sub">勾选"允许基层取药"，处方自动流转至患者所在乡镇</span></h3>
+                    <div class="h-right">县级医生权限</div>
+                </div>
+                <form id="rxForm">
+                    <div class="form-grid">
+                        <div><label>患者（病种）<span class="req">*</span></label><input type="text" id="rxPatient" placeholder="如：张某某（心脏支架术后）" required></div>
+                        <div><label>药品名称<span class="req">*</span></label><input type="text" id="rxDrug" placeholder="如：氯吡格雷片" required></div>
+                        <div><label>单次用量<span class="req">*</span></label><input type="text" id="rxDose" placeholder="如：75mg/日" required></div>
+                        <div><label>配送至<span class="req">*</span></label><select id="rxPlace"><option>郭吴村卫生室</option><option>黑力巴村卫生室</option><option>阿木去乎镇卫生院</option><option>黄泥湾镇卫生院</option></select></div>
+                        <div class="full">
+                            <label style="display:flex;align-items:center;gap:8px;font-weight:400">
+                                <input type="checkbox" id="rxAllow" checked style="width:auto"> 允许基层取药（勾选后处方自动流转至患者所在乡镇卫生院/村卫生室）
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn" type="submit" style="margin-top:16px">开具并流转处方</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 功能3 追溯记录 -->
+        <div class="module">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">3</span>
+                    <h3>配送确认与处方全流程追溯记录</h3>
+                </div>
+                <div class="trace-block">
+                    <b>处方编号：RX20260812001</b><br>
+                    药品：氯吡格雷片 | 患者：张某某（心脏支架术后）<br>
+                    流转完整链条：<span style="color:var(--text)">县级王医生（开方）→县药剂科李药师（审核）→郭吴村刘村医（调配）→患者张某某（取药人）</span>
+                </div>
+                <div class="trace-block">
+                    <b>处方编号：RX20260811005</b><br>
+                    药品：厄贝沙坦片 | 患者：李某某（原发性高血压）<br>
+                    流转完整链条：<span style="color:var(--text)">县级陈医生（开方）→县药剂科周药师（审核）→黑力巴村王医师（调配）→患者李某某（取药人）</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能4 续方临时授权（县级医生权限） -->
+        <div class="module" data-roles="county">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">4</span>
+                    <h3>慢病患者续方临时授权管理 <span class="sub">授权有时效、有范围，点击"续签"可延长有效期</span></h3>
+                </div>
+                <table class="data" id="authTable">
+                    <thead><tr><th>序号</th><th>患者病种</th><th>授权药品</th><th>授权基层医生</th><th>授权有效期</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="chronic-service.html">慢病用药便民服务</a>
+                <a href="guide.html">全角色操作指南</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <!-- 追溯链弹窗 -->
+    <div class="modal-mask" id="traceMask">
+        <div class="modal">
+            <div class="modal-head">
+                <h4>处方全流程追溯链</h4>
+                <button class="close" onclick="closeTrace()">✕</button>
+            </div>
+            <p style="font-size:13px;color:var(--muted)" id="traceMeta"></p>
+            <div class="timeline" id="traceBody"></div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="drugs-data.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let rxList = [
+            { drug:"阿司匹林肠溶片", dose:"1片/日", place:"郭吴村卫生室", status:"已送达",
+              chain:[["县级王医生","开具电子处方"],["县药剂科李药师","审核处方"],["郭吴村刘村医","调配药品"],["患者张某某","取药确认"]] },
+            { drug:"氯吡格雷片（心脏支架术后）", dose:"75mg/日", place:"县医院中心药房", status:"待配送",
+              chain:[["县级王医生","开具电子处方"],["县药剂科李药师","审核处方"],["郭吴村刘村医","接收处方"] ] },
+            { drug:"厄贝沙坦片（高血压）", dose:"150mg/日", place:"黑力巴村卫生室", status:"配送中",
+              chain:[["县级陈医生","开具电子处方"],["县药剂科周药师","审核处方"],["黑力巴村王医师","接收处方"],["中心药房","出库配送"] ] }
+        ];
+        let authList = [
+            { disease:"心脏支架术后", drug:"氯吡格雷、阿托伐他汀", doctor:"郭吴村刘医生", end:"2026-11-01" },
+            { disease:"原发性高血压", drug:"氨氯地平、美托洛尔", doctor:"黑力巴村王医师", end:"2026-10-20" }
+        ];
+        let filter = "全部";
+        const STATUS_NEXT = { "待配送":"配送中", "配送中":"已送达" };
+
+        function statusBadge(s){
+            const cls = s==="已送达"?"done":(s==="配送中"?"going":"wait");
+            return '<span class="badge '+cls+'">'+s+'</span>';
+        }
+        function renderRx(){
+            const tbody = document.querySelector("#rxTable tbody");
+            tbody.innerHTML = "";
+            const list = filter==="全部" ? rxList : rxList.filter(r=>r.status===filter);
+            if(list.length===0){ tbody.innerHTML='<tr><td colspan="6" class="empty">该状态下暂无处方</td></tr>'; return; }
+            list.forEach((r)=>{
+                const realIdx = rxList.indexOf(r);
+                let btn = "";
+                if(r.status==="已送达") btn = '<button class="btn ok sm" onclick="showTrace('+realIdx+')">查看完整追溯链</button>';
+                else if(r.status==="待配送") btn = '<button class="btn sm" onclick="advance('+realIdx+')">确认配送</button>';
+                else btn = '<button class="btn sm" onclick="advance('+realIdx+')">确认送达</button> <button class="btn ghost sm" onclick="showTrace('+realIdx+')">追溯链</button>';
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td class="num">${realIdx+1}</td><td><b>${r.drug}</b></td><td>${r.dose}</td><td>${r.place}</td><td>${statusBadge(r.status)}</td><td>${btn}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        function advance(i){
+            const r = rxList[i];
+            const next = STATUS_NEXT[r.status];
+            if(!next) return;
+            r.status = next;
+            if(next==="配送中"){ r.chain.push(["中心药房","出库配送"]); toast("「"+r.drug+"」已出库，配送中"); }
+            else { r.chain.push(["患者·取药人","取药确认"]); toast("「"+r.drug+"」已送达，取药确认完成"); }
+            renderRx();
+        }
+        function showTrace(i){
+            const r = rxList[i];
+            document.getElementById("traceMeta").textContent = r.drug + " ｜ " + r.place;
+            const body = document.getElementById("traceBody");
+            body.innerHTML = "";
+            r.chain.forEach((c, k)=>{
+                const div = document.createElement("div");
+                div.className = "tl-item" + (k < r.chain.length-1 ? " done" : "");
+                div.innerHTML = '<div class="who">'+c[0]+'</div><div class="what">'+c[1]+'</div>';
+                body.appendChild(div);
+            });
+            document.getElementById("traceMask").classList.add("show");
+        }
+        function closeTrace(){ document.getElementById("traceMask").classList.remove("show"); }
+        function setFilter(f){
+            filter = f;
+            document.querySelectorAll("#filterBar .btn").forEach(b=>b.classList.remove("active"));
+            event.target.classList.add("active");
+            renderRx();
+        }
+
+        function renderAuth(){
+            const tbody = document.querySelector("#authTable tbody");
+            tbody.innerHTML = "";
+            authList.forEach((a, i)=>{
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td class="num">${i+1}</td><td><b>${a.disease}</b></td><td>${a.drug}</td><td>${a.doctor}</td><td><span class="tag-auth">2026-08-01 ~ ${a.end}</span></td>
+                    <td><button class="btn ok sm" onclick="renewAuth(${i})">续签授权</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        function renewAuth(i){
+            const a = authList[i];
+            const cur = new Date(a.end + "T00:00:00");
+            cur.setMonth(cur.getMonth()+3);
+            a.end = cur.toISOString().slice(0,10);
+            renderAuth();
+            toast("已为「"+a.disease+"」续签授权，有效期延长至 "+a.end);
+        }
+
+        document.getElementById("rxForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            const patient = document.getElementById("rxPatient").value.trim();
+            const drug = document.getElementById("rxDrug").value.trim();
+            const dose = document.getElementById("rxDose").value.trim();
+            const place = document.getElementById("rxPlace").value;
+            const m = patient.match(/[（(]([^）)]+)[）)]/);
+            const label = m ? drug + "（" + m[1] + "）" : drug;
+            rxList.push({ drug:label, dose, place, status:"待配送",
+                chain:[["县级医生","开具电子处方"],["县药剂科药师","审核处方"]] });
+            renderRx();
+            this.reset();
+            toast("处方已开具并流转至「"+place+"」");
+        });
+
+        window.onload = function(){ renderRx(); renderAuth(); };
+    </script>
+</body>
+</html>
