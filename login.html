@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统一身份认证登录 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-actions">
+                <a href="guide.html">操作指南</a>
+                <a href="index.html">返回首页</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 登录主体 -->
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <div class="auth-intro">
+                <div class="auth-logo">
+                    <svg viewBox="0 0 48 48" width="46" height="46">
+                        <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                        <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                        <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                        <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    </svg>
+                    <h2>统一身份认证</h2>
+                </div>
+                <p>面向县—乡—村三级医疗机构与参保群众的统一登录入口，不同角色登录后进入各自专属工作台，可办理药品目录、处方流转、慢病用药等业务。</p>
+                <ul class="auth-feat">
+                    <li>村医：缺药上报 · 续方代办 · 处方调配</li>
+                    <li>县级医生：电子开方 · 续方审核 · 权限授权</li>
+                    <li>县药剂科：缺药审核 · 目录动态管理</li>
+                    <li>参保群众：慢病档案 · 取药进度 · 政策资讯</li>
+                </ul>
+            </div>
+            <div class="auth-form">
+                <div class="sec-head" style="margin-bottom:18px"><h2>用户登录</h2></div>
+
+                <div class="role-switch" id="roleSwitch">
+                    <div class="role-opt active" data-role="public"><span class="ic">众</span>参保群众</div>
+                    <div class="role-opt" data-role="village"><span class="ic">村</span>村医</div>
+                    <div class="role-opt" data-role="county"><span class="ic">医</span>县级医生</div>
+                    <div class="role-opt" data-role="pharmacy"><span class="ic">药</span>县药剂科</div>
+                </div>
+
+                <div class="field">
+                    <label>账号 / 身份证号 / 医师执业证号</label>
+                    <input type="text" id="account" placeholder="请输入登录账号">
+                </div>
+                <div class="field">
+                    <label>密码</label>
+                    <input type="password" id="password" placeholder="请输入登录密码">
+                </div>
+                <div class="field code-row">
+                    <div style="flex:1">
+                        <label>验证码</label>
+                        <input type="text" id="code" placeholder="请输入验证码">
+                    </div>
+                    <div style="align-self:flex-end"><div class="captcha" id="captcha" onclick="refreshCaptcha()">AB3D</div></div>
+                </div>
+
+                <button class="btn btn-block" id="loginBtn">登 录</button>
+
+                <div class="auth-links">
+                    <a href="javascript:void(0)" onclick="openRegister()">注册新用户</a>
+                    <a href="javascript:void(0)" onclick="openForgot()">忘记密码</a>
+                    <a href="javascript:void(0)" onclick="openFace()">人脸识别登录</a>
+                </div>
+
+                <div class="auth-note" id="authNote">
+                    <b>演示说明：</b>本平台为模拟政协提案演示系统。请先在上方选择角色，账号密码可任意填写（或留空），点击「登录」即进入对应角色工作台。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="index.html">返回首页</a>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="guide.html">全角色操作指南</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script>
+        var ROLE_NAMES = { public: '参保群众', village: '村医', county: '县级医生', pharmacy: '县药剂科' };
+        var ROLE_DEMO = {
+            public:   { name: '张某某（参保人）',   account: '62292619******1234' },
+            village:  { name: '刘村医',             account: '郭吴村卫生室' },
+            county:   { name: '王医生',             account: '夏河县人民医院' },
+            pharmacy: { name: '李药师',             account: '夏河县人民医院药剂科' }
+        };
+        var selectedRole = 'public';
+
+        function refreshCaptcha() {
+            var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            var s = '';
+            for (var i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+            document.getElementById('captcha').textContent = s;
+        }
+
+        // 角色选择
+        document.getElementById('roleSwitch').addEventListener('click', function (e) {
+            var opt = e.target.closest('.role-opt');
+            if (!opt) return;
+            selectedRole = opt.dataset.role;
+            document.querySelectorAll('.role-opt').forEach(function (o) { o.classList.remove('active'); });
+            opt.classList.add('active');
+            var demo = ROLE_DEMO[selectedRole];
+            document.getElementById('account').placeholder = demo.account;
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            var demo = ROLE_DEMO[selectedRole];
+            try {
+                localStorage.setItem('ygt_role', selectedRole);
+                localStorage.setItem('ygt_name', demo.name);
+            } catch (e) { /* localStorage 不可用时（隐私模式 / 本地文件协议），仍正常跳转 */ }
+            location.href = 'dashboard.html?role=' + encodeURIComponent(selectedRole) + '&name=' + encodeURIComponent(demo.name);
+        });
+
+        // 回车登录
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') document.getElementById('loginBtn').click();
+        });
+
+        function openRegister() {
+            openModal('注册新用户', '<div class="form-grid"><div><label>姓名 / 机构名称<span class="req">*</span></label><input id="regName" placeholder="请输入"></div><div><label>手机号<span class="req">*</span></label><input id="regPhone" placeholder="请输入"></div></div><div class="actions"><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn" onclick="doRegister()">提交注册</button></div>');
+        }
+        function doRegister() {
+            toast('注册申请已提交，请等待管理员审核通过后登录');
+            closeModal();
+        }
+        function openForgot() {
+            openModal('找回密码', '<p>请携带相关证件到线下服务窗口办理，或通过手机端"国家医保服务平台"App 进行实名找回（演示）。</p><div class="actions"><button class="btn" onclick="closeModal()">知道了</button></div>');
+        }
+        function openFace() {
+            openModal('人脸识别登录', '<p style="text-align:center;padding:20px 0">请使用手机端"国家医保服务平台"App 扫描二维码完成人脸识别登录（演示）。</p><div class="actions"><button class="btn" onclick="closeModal()">取消</button></div>');
+        }
+
+        refreshCaptcha();
+    </script>
+</body>
+</html>
