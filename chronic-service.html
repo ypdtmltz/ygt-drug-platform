@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慢病用药便民服务 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-right">
+                <div class="searchbox">
+                    <input type="text" placeholder="请输入药品名称 / 批准文号检索">
+                    <button type="button">检索</button>
+                </div>
+                <div class="header-actions">
+                    <a href="guide.html">操作指南</a>
+                    <a class="login-btn" href="login.html">用户登录</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html">首页</a>
+            <a href="dashboard.html">我的工作台</a>
+            <a href="drug-manage.html">药品目录动态管理</a>
+            <a href="prescription.html">处方流转与权限协同</a>
+            <a href="chronic-service.html" class="active">慢病用药便民服务</a>
+            <a href="effect.html">政策成效</a>
+        </div>
+    </nav>
+
+    <!-- 内页横幅 -->
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <h1>慢病用药便民服务</h1>
+            <p>为慢病患者建立统一用药档案，实现用药周期智能提醒、线上续方远程审核、药品定向配送的全流程便民服务。</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="crumb">
+            <a href="index.html">首页</a><span class="sep">&gt;</span><span>慢病用药便民服务</span>
+        </div>
+
+        <!-- 功能1 档案 -->
+        <div class="module" data-roles="village county pharmacy">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">1</span>
+                    <h3>建立慢病患者用药电子档案 <span class="sub">一名患者多种慢病，一份档案统一管理</span></h3>
+                </div>
+                <form id="patientForm">
+                    <div class="form-grid">
+                        <div><label>患者姓名<span class="req">*</span></label><input type="text" id="pName" placeholder="如：张某某" required></div>
+                        <div><label>慢病类型<span class="req">*</span></label><select id="pDisease"><option>高血压</option><option>糖尿病</option><option>冠心病/心脏支架术后</option><option>慢阻肺</option><option>高血压、糖尿病（多病合并）</option></select></div>
+                        <div><label>用药方案<span class="req">*</span></label><input type="text" id="pPlan" placeholder="如：氨氯地平 5mg 每日1次" required></div>
+                        <div><label>上次取药日期<span class="req">*</span></label><input type="date" id="pDate" value="2026-08-01" required></div>
+                    </div>
+                    <button class="btn" type="submit" style="margin-top:16px">建立/更新档案</button>
+                </form>
+                <div class="toolbar" style="margin-top:18px">
+                    <div class="search">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                        <input type="text" id="searchPatient" placeholder="按姓名 / 病种 / 村医搜索档案..." oninput="renderPatients()">
+                    </div>
+                </div>
+                <table class="data" id="patientTable">
+                    <thead><tr><th>序号</th><th>患者</th><th>慢病类型</th><th>用药方案</th><th>上次取药</th><th>包干村医</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 功能2 续方提醒 -->
+        <div class="module" data-roles="village">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">2</span>
+                    <h3>用药周期智能提醒与线上续方 <span class="sub">药量不足7天自动提醒，村医一键申请续方</span></h3>
+                </div>
+                <table class="data" id="remindTable">
+                    <thead><tr><th>序号</th><th>患者</th><th>药品</th><th>剩余药量</th><th>提醒状态</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 功能3 配送进度 -->
+        <div class="module">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">3</span>
+                    <h3>中心药房定向配送 <span class="sub">配送状态全程可查，可点击推进配送节点</span></h3>
+                </div>
+                <div class="progress-steps" id="deliverySteps">
+                    <div class="ps" data-s="0"><div class="dot">1</div><div class="txt">已出库</div></div>
+                    <div class="ps" data-s="1"><div class="dot">2</div><div class="txt">运输中</div></div>
+                    <div class="ps" data-s="2"><div class="dot">3</div><div class="txt">到达村卫生室</div></div>
+                    <div class="ps" data-s="3"><div class="dot">4</div><div class="txt">患者取药/上门送达</div></div>
+                </div>
+                <div style="text-align:center;margin-top:16px">
+                    <button class="btn" onclick="advanceDelivery()">推进至下一配送节点</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="prescription.html">处方流转与权限协同</a>
+                <a href="guide.html">全角色操作指南</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <div id="toast"></div>
+
+    <script src="drugs-data.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let patients = [
+            { name:"张某某", disease:"冠心病/心脏支架术后", plan:"氯吡格雷 75mg 每日1次", date:"2026-08-01", doc:"郭吴村刘村医" },
+            { name:"李某某", disease:"高血压", plan:"厄贝沙坦 150mg 每日1次", date:"2026-07-20", doc:"黑力巴村王医师" },
+            { name:"马某某", disease:"高血压、糖尿病", plan:"氨氯地平+二甲双胍", date:"2026-07-25", doc:"阿木去乎镇卫生院" }
+        ];
+        let reminds = [
+            { name:"张某某", drug:"氯吡格雷片", days:3, status:"urgent" },
+            { name:"李某某", drug:"厄贝沙坦片", days:6, status:"near" },
+            { name:"马某某", drug:"二甲双胍缓释片", days:15, status:"ok" }
+        ];
+        let deliveryStep = 1;
+
+        function renderPatients(){
+            const kw = document.getElementById("searchPatient").value.trim();
+            const tbody = document.querySelector("#patientTable tbody");
+            tbody.innerHTML = "";
+            const list = patients.filter(p=>!kw || p.name.includes(kw) || p.disease.includes(kw) || p.doc.includes(kw));
+            if(list.length===0){ tbody.innerHTML='<tr><td colspan="6" class="empty">未找到匹配档案</td></tr>'; return; }
+            list.forEach((p, idx)=>{
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td class="num">${idx+1}</td><td><b>${p.name}</b></td><td>${p.disease}</td><td>${p.plan}</td><td>${p.date}</td><td>${p.doc}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        function renderReminds(){
+            const tbody = document.querySelector("#remindTable tbody");
+            tbody.innerHTML = "";
+            reminds.forEach((r, i)=>{
+                let badge, btn;
+                if(r.days<=3){ badge='<span class="badge red">剩余'+r.days+'天，紧急</span>'; btn='<button class="btn warn sm" onclick="applyRenew('+i+')">一键申请续方</button>'; }
+                else if(r.days<=7){ badge='<span class="badge amber">剩余'+r.days+'天，临近</span>'; btn='<button class="btn sm" onclick="applyRenew('+i+')">申请续方</button>'; }
+                else { badge='<span class="badge ok">药量充足</span>'; btn='<span style="color:var(--muted);font-size:13px">无需操作</span>'; }
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td class="num">${i+1}</td><td><b>${r.name}</b></td><td>${r.drug}</td><td>${r.days} 天</td><td>${badge}</td><td>${btn}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        function applyRenew(i){
+            const r = reminds[i];
+            r.status = "ok"; r.days = 30;
+            renderReminds();
+            toast("已向县级医生推送「"+r.name+" · "+r.drug+"」续方申请，等待远程审核");
+        }
+        function advanceDelivery(){
+            if(deliveryStep < 4) deliveryStep++;
+            const steps = document.querySelectorAll("#deliverySteps .ps");
+            steps.forEach(s=>{
+                const n = Number(s.dataset.s);
+                s.classList.remove("active","done");
+                if(n < deliveryStep-1) s.classList.add("done");
+                else if(n === deliveryStep-1) s.classList.add("active");
+            });
+            const msgs = ["已出库","运输中","已到达村卫生室","患者已取药/上门送达完成"];
+            toast("配送节点推进："+msgs[deliveryStep-1]);
+        }
+
+        document.getElementById("patientForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            patients.push({ name:document.getElementById("pName").value.trim(), disease:document.getElementById("pDisease").value, plan:document.getElementById("pPlan").value.trim(), date:document.getElementById("pDate").value, doc:"郭吴村刘村医" });
+            renderPatients();
+            this.reset();
+            document.getElementById("pDate").value = "2026-08-01";
+            toast("慢病档案已建立，一名患者多种慢病合并管理");
+        });
+
+        window.onload = function(){ renderPatients(); renderReminds(); advanceDelivery(); };
+    </script>
+</body>
+</html>
