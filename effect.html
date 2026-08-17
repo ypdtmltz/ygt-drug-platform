@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>政策成效与落地案例 - 甘肃省县域医共体药品综合管理平台</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .sec-title{font-size:20px;font-weight:700;color:var(--blue-deep);margin:34px 0 16px;padding-left:12px;border-left:4px solid var(--red);font-family:var(--serif);letter-spacing:1px}
+        .compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+        .cmp{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;border-top:3px solid var(--blue)}
+        .cmp.before{border-top-color:var(--danger)}
+        .cmp.after{border-top-color:var(--ok)}
+        .cmp .tag{font-size:12.5px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+        .cmp.before .tag{color:var(--danger)}
+        .cmp.after .tag{color:var(--ok)}
+        .cmp .big{font-size:30px;font-weight:700;line-height:1.15;margin-bottom:6px;font-family:var(--serif)}
+        .cmp.before .big{color:var(--danger)}
+        .cmp.after .big{color:var(--ok)}
+        .cmp p{font-size:13px;color:var(--muted)}
+        .cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+        .case{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;border-top:3px solid var(--blue);transition:.2s}
+        .case:hover{border-color:var(--blue-border);box-shadow:var(--shadow-lg)}
+        .case .k{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:1px;margin-bottom:10px}
+        .case h4{font-family:var(--serif);font-size:18px;color:var(--blue-deep);margin-bottom:10px}
+        .case p{font-size:14px;color:#4a5a70;line-height:1.85}
+        .case .sol{margin-top:14px;padding:12px 14px;background:var(--ok-bg);border-left:3px solid var(--ok);border-radius:2px;font-size:13.5px;color:var(--ok)}
+    </style>
+</head>
+<body>
+    <!-- 顶部工具条 -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="welcome">欢迎访问甘肃省县域医共体药品综合管理平台</span>
+            <div class="links">
+                <span id="today"></span>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">无障碍浏览</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">适老版</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">设为首页</a>
+                <span class="sep">|</span>
+                <a href="javascript:void(0)">加入收藏</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页头 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">
+                <svg class="emblem" viewBox="0 0 48 48" width="48" height="48" aria-label="平台标识">
+                    <circle cx="24" cy="24" r="23" fill="#c8102e"/>
+                    <circle cx="24" cy="24" r="20" fill="#ffffff"/>
+                    <circle cx="24" cy="24" r="17.5" fill="#1b4f8b"/>
+                    <path d="M21.2 11.6h5.6v6.0h6.0v5.6h-6.0v6.0h-5.6v-6.0h-6.0v-5.6h6.0z" fill="#ffffff"/>
+                    <path d="M24 6.4l1.5 3.3 3.6.4-2.7 2.3.8 3.5-3.2-2-3.2 2 .8-3.5-2.7-2.3 3.6-.4z" fill="#f0c33c"/>
+                </svg>
+                <span class="brand-text">
+                    <h1>甘肃省县域医共体药品综合管理平台</h1>
+                    <p>Gansu County Medical Community Drug Management Platform</p>
+                </span>
+            </a>
+            <div class="header-right">
+                <div class="searchbox">
+                    <input type="text" placeholder="请输入药品名称 / 批准文号检索">
+                    <button type="button">检索</button>
+                </div>
+                <div class="header-actions">
+                    <a href="guide.html">操作指南</a>
+                    <a class="login-btn" href="login.html">用户登录</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html">首页</a>
+            <a href="dashboard.html">我的工作台</a>
+            <a href="drug-manage.html">药品目录动态管理</a>
+            <a href="prescription.html">处方流转与权限协同</a>
+            <a href="chronic-service.html">慢病用药便民服务</a>
+            <a href="effect.html" class="active">政策成效</a>
+        </div>
+    </nav>
+
+    <!-- 内页横幅 -->
+    <div class="page-banner">
+        <div class="page-banner-inner">
+            <h1>政策成效与落地案例</h1>
+            <p>平台不改变现有基药考核和医保监管框架，而是在刚性约束下通过数据驱动与流程优化，实现基层用药的精准供给。</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="crumb">
+            <a href="index.html">首页</a><span class="sep">&gt;</span><span>政策成效</span>
+        </div>
+
+        <div class="sec-title">调研现状 vs 平台预期成效</div>
+        <div class="compare-grid">
+            <div class="cmp before">
+                <div class="tag">● 调研现状</div>
+                <div class="big">62.5%</div>
+                <p>村民曾遇到"县医院开药、回村买不到"</p>
+            </div>
+            <div class="cmp after">
+                <div class="tag">● 平台后</div>
+                <div class="big">一键直达</div>
+                <p>缺药一键上报→在线审核→目录实时更新</p>
+            </div>
+            <div class="cmp before">
+                <div class="tag">● 调研现状</div>
+                <div class="big">1300→600种</div>
+                <p>医共体药品目录刚性压缩，常用药被大量剔除</p>
+            </div>
+            <div class="cmp after">
+                <div class="tag">● 平台后</div>
+                <div class="big">常态化调整</div>
+                <p>以全域用药数据支撑目录动态、精准调整</p>
+            </div>
+            <div class="cmp before">
+                <div class="tag">● 调研现状</div>
+                <div class="big">每月跑县城</div>
+                <p>稳定期慢病患者需长途往返取药续方</p>
+            </div>
+            <div class="cmp after">
+                <div class="tag">● 平台后</div>
+                <div class="big">村级可取</div>
+                <p>线上续方远程审核，药品定向配送到村</p>
+            </div>
+        </div>
+
+        <div class="sec-title">真实落地案例（来自实地调研）</div>
+        <div class="cases">
+            <div class="case">
+                <div class="k">案例一 · 医保罚款</div>
+                <h4>乡镇卫生院因自行采购被罚30余万元</h4>
+                <p>某乡镇卫生院为满足患者用药需求，自行采购了目录外药品，结果因违反医保规定被处以30余万元罚款，基层为规避罚款趋于保守，患者用药需求更难满足。</p>
+                <div class="sol">平台对策：缺药"一键上报—审核—调配"快速响应，纳入目录的采购合规合法，杜绝"私下采购"风险。</div>
+            </div>
+            <div class="case">
+                <div class="k">案例二 · 牧区胰岛素</div>
+                <h4>牧区胰岛素依赖患者长途赴兰州采购</h4>
+                <p>胰岛素依赖型糖尿病患者因乡镇卫生院无权开具注射类胰岛素，需长途前往兰州采购，路程奔波、延误治疗。</p>
+                <div class="sol">平台对策：处方流转+续方授权机制，让稳定期患者在基层即可凭上级处方取药、医保结算。</div>
+            </div>
+            <div class="case">
+                <div class="k">案例三 · 敬老院慢病</div>
+                <h4>敬老院老人多病合并、取药全靠护工跑腿</h4>
+                <p>调研显示敬老院91.7%的老人患慢性病，33.3%曾遇县乡药品不匹配，近九成缺药后需专程赴县城购买。</p>
+                <div class="sol">平台对策：一名患者多种慢病一份档案统一管理，敬老院等集中机构支持批量配送到院。</div>
+            </div>
+        </div>
+
+        <div style="text-align:center;margin:46px 0 10px">
+            <a class="btn" href="index.html">返回首页继续体验</a>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <h5>平台简介</h5>
+                <p>甘肃省县域医共体药品综合管理平台，面向县—乡—村三级医疗机构，提供药品目录动态管理、处方流转与权限协同、慢病用药便民服务，推动基层药品保障精准化、规范化。</p>
+            </div>
+            <div>
+                <h5>快速链接</h5>
+                <a href="drug-manage.html">药品目录动态管理</a>
+                <a href="prescription.html">处方流转与权限协同</a>
+                <a href="chronic-service.html">慢病用药便民服务</a>
+            </div>
+            <div>
+                <h5>联系我们</h5>
+                <a href="javascript:void(0)">服务热线：0931-12320</a>
+                <a href="javascript:void(0)">工作时间：工作日 8:30—17:30</a>
+                <a href="javascript:void(0)">意见反馈：在线留言</a>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div>首都医科大学模拟政协提案小组 · 演示系统</div>
+            <div>本系统为模拟政协提案活动演示作品，仅用于展示交流，非真实政务服务平台</div>
+        </div>
+    </footer>
+
+    <script src="drugs-data.js"></script>
+    <script src="common.js"></script>
+</body>
+</html>
