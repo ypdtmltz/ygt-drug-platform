@@ -149,10 +149,10 @@
             <div class="module-box">
                 <div class="module-head">
                     <span class="step-no">4</span>
-                    <h3>慢病患者续方临时授权管理 <span class="sub">授权有时效、有范围，点击"续签"可延长有效期</span></h3>
+                    <h3>慢病患者续方授权管理 <span class="sub">授权有时效、有范围，有效期可自定义或一键延长 1/2/3 个月</span></h3>
                 </div>
                 <table class="data" id="authTable">
-                    <thead><tr><th>序号</th><th>患者病种</th><th>授权药品</th><th>授权基层医生</th><th>授权有效期</th><th>操作</th></tr></thead>
+                    <thead><tr><th>序号</th><th>患者病种</th><th>授权药品</th><th>授权基层医生</th><th>授权有效期（可自定义 / 快捷延长）</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -211,8 +211,8 @@
               chain:[["县级陈医生","开具电子处方"],["县药剂科周药师","审核处方"],["黑力巴村王医师","接收处方"],["中心药房","出库配送"] ] }
         ];
         let authList = [
-            { disease:"心脏支架术后", drug:"氯吡格雷、阿托伐他汀", doctor:"郭吴村刘医生", end:"2026-11-01" },
-            { disease:"原发性高血压", drug:"氨氯地平、美托洛尔", doctor:"黑力巴村王医师", end:"2026-10-20" }
+            { disease:"心脏支架术后", drug:"氯吡格雷、阿托伐他汀", doctor:"郭吴村刘医生", start:"2026-08-01", end:"2026-11-01" },
+            { disease:"原发性高血压", drug:"氨氯地平、美托洛尔", doctor:"黑力巴村王医师", start:"2026-08-01", end:"2026-10-20" }
         ];
         let filter = "全部";
         const STATUS_NEXT = { "待配送":"配送中", "配送中":"已送达" };
@@ -267,23 +267,40 @@
             renderRx();
         }
 
+        function fmtDate(d){
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
         function renderAuth(){
             const tbody = document.querySelector("#authTable tbody");
             tbody.innerHTML = "";
             authList.forEach((a, i)=>{
                 const tr = document.createElement("tr");
-                tr.innerHTML = `<td class="num">${i+1}</td><td><b>${a.disease}</b></td><td>${a.drug}</td><td>${a.doctor}</td><td><span class="tag-auth">2026-08-01 ~ ${a.end}</span></td>
-                    <td><button class="btn ok sm" onclick="renewAuth(${i})">续签授权</button></td>`;
+                tr.innerHTML = `<td class="num">${i+1}</td><td><b>${a.disease}</b></td><td>${a.drug}</td><td>${a.doctor}</td>
+                    <td style="text-align:left">
+                        <span class="tag-auth">${a.start} ~ ${a.end}</span>
+                        <div style="margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                            <input type="date" value="${a.end}" onchange="setAuthEnd(${i}, this.value)" style="width:auto;padding:3px 6px;font-size:12.5px">
+                            <button class="btn sm" onclick="addAuthMonths(${i},1)">+1月</button>
+                            <button class="btn sm" onclick="addAuthMonths(${i},2)">+2月</button>
+                            <button class="btn sm" onclick="addAuthMonths(${i},3)">+3月</button>
+                        </div>
+                    </td>`;
                 tbody.appendChild(tr);
             });
         }
-        function renewAuth(i){
+        function addAuthMonths(i, m){
             const a = authList[i];
             const cur = new Date(a.end + "T00:00:00");
-            cur.setMonth(cur.getMonth()+3);
-            a.end = cur.toISOString().slice(0,10);
+            cur.setMonth(cur.getMonth() + m);
+            a.end = fmtDate(cur);
             renderAuth();
-            toast("已为「"+a.disease+"」续签授权，有效期延长至 "+a.end);
+            toast("已将「" + a.disease + "」授权延长 " + m + " 个月，至 " + a.end);
+        }
+        function setAuthEnd(i, val){
+            if(!val) return;
+            authList[i].end = val;
+            renderAuth();
+            toast("已将「" + authList[i].disease + "」授权有效期设置为 " + val);
         }
 
         document.getElementById("rxForm").addEventListener("submit", function(e){
