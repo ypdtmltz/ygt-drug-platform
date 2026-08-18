@@ -491,12 +491,8 @@ table.data .empty{color:var(--muted);padding:26px 0;background:#fff}
    ========================================================================== */
 body.bf-mode{font-size:16.5px}
 body.bf-mode .main-nav a{font-size:17px}
-body.elder-mode{font-size:19px}
-body.elder-mode .brand-text h1{font-size:31px}
-body.elder-mode .main-nav a{font-size:18px;padding:15px 24px}
-body.elder-mode .notice-list a,
-body.elder-mode .todo-list li,
-body.elder-mode .wb-side .wb-menu a{font-size:16px}
+body.elder-mode{zoom:1.2}
+body.elder-mode .main-nav a{font-weight:600}
 
 @media(max-width:900px){
     .header-inner{flex-direction:column;align-items:flex-start}
