@@ -166,6 +166,48 @@
                 <div class="mini-bars" id="miniBars"></div>
             </div>
         </div>
+
+        <!-- 功能4 全县域临时药品目录（自动生成） -->
+        <div class="module">
+            <div class="module-box">
+                <div class="module-head">
+                    <span class="step-no">4</span>
+                    <h3>全县域临时药品目录 <span class="sub">原有目录 + 基层上报，自动生成</span></h3>
+                    <div class="h-right">自动成图 · 实时更新</div>
+                </div>
+
+                <div class="temp-flow">
+                    <div class="tf-node"><b id="tfOriginal">0</b><span>原有目录（种）</span></div>
+                    <div class="tf-op">+</div>
+                    <div class="tf-node"><b id="tfReport">0</b><span>基层上报药品（种）</span></div>
+                    <div class="tf-op">=</div>
+                    <div class="tf-node hl"><b id="tfTemp">0</b><span>临时目录（种）</span></div>
+                    <div class="tf-op arrow">&gt;</div>
+                    <div class="tf-node gold"><b id="tfNew">0</b><span>建议新增（种）</span></div>
+                </div>
+                <p class="temp-note">临时目录由系统依据「原有药品目录」与「各乡镇医院实时上报的药品需求」自动合并去重生成，仅作动态参考、不直接改写正式目录；县药剂科据此研判需求热度，进而指导正式药品目录的调整完善。</p>
+
+                <div class="charts-row">
+                    <div class="chart-box">
+                        <div class="chart-title">各药品需求人数（按上报人数降序）</div>
+                        <div class="svg-chart" id="demandChart"></div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title">临时目录药品分类构成（品种数）</div>
+                        <div class="svg-chart" id="catChart"></div>
+                    </div>
+                </div>
+
+                <div class="toolbar" style="margin-top:18px">
+                    <button class="btn sm" onclick="rebuildTempCatalog()">重新生成临时目录</button>
+                    <span class="muted" style="font-size:12.5px">提交缺药上报或完成审核后，本目录与统计图将自动更新</span>
+                </div>
+                <table class="data" id="tempTable">
+                    <thead><tr><th>序号</th><th>药品名称</th><th>分类</th><th>来源</th><th>需求人数</th><th>有无替代药</th><th>建议动作</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- 页脚 -->
@@ -213,14 +255,43 @@
     <script src="drugs-data.js"></script>
     <script src="common.js"></script>
     <script>
+        // ===== 演示数据：原有目录 / 基层上报（待审核 + 已通过） =====
+        let originalCatalog = [
+            { name:"二甲双胍缓释片", cat:"内分泌代谢用药" },
+            { name:"阿司匹林肠溶片", cat:"心血管系统用药" },
+            { name:"硝苯地平缓释片", cat:"心血管系统用药" },
+            { name:"酒石酸美托洛尔片", cat:"心血管系统用药" },
+            { name:"奥美拉唑肠溶胶囊", cat:"消化系统用药" },
+            { name:"阿莫西林胶囊", cat:"抗感染用药" },
+            { name:"布洛芬缓释胶囊", cat:"解热镇痛用药" },
+            { name:"蒙脱石散", cat:"消化系统用药" },
+            { name:"复方丹参滴丸", cat:"中成药" },
+            { name:"氢氯噻嗪片", cat:"心血管系统用药" }
+        ];
         let waitAuditList = [
-            { name:"苯磺酸氨氯地平片", factory:"XX制药", num:126, replace:"无合适替代药", org:"郭吴村卫生室" },
-            { name:"阿托伐他汀钙片", factory:"XX药业集团", num:89, replace:"有同类替代药", org:"黑力巴村卫生室" }
+            { name:"苯磺酸氨氯地平片", factory:"辉瑞制药", num:126, replace:"无合适替代药", org:"郭吴村卫生室", cat:"心血管系统用药" },
+            { name:"阿托伐他汀钙片", factory:"辉瑞制药", num:89, replace:"有同类替代药", org:"黑力巴村卫生室", cat:"心血管系统用药" },
+            { name:"缬沙坦胶囊", factory:"诺华制药", num:64, replace:"无合适替代药", org:"阿木去乎镇卫生院", cat:"心血管系统用药" },
+            { name:"瑞舒伐他汀钙片", factory:"阿斯利康", num:58, replace:"有同类替代药", org:"黄泥湾镇卫生院", cat:"心血管系统用药" },
+            { name:"硫酸沙丁胺醇吸入气雾剂", factory:"葛兰素史克", num:37, replace:"无合适替代药", org:"郭吴村卫生室", cat:"呼吸系统用药" }
         ];
         let passDrugList = [
-            { name:"二甲双胍缓释片", factory:"XX制药有限公司", passTime:"2026-07-15" },
-            { name:"美托洛尔缓释片", factory:"XX药业集团", passTime:"2026-07-28" }
+            { name:"二甲双胍缓释片", factory:"正大天晴", passTime:"2026-07-15", num:112, replace:"有同类替代药", org:"黑力巴村卫生室", cat:"内分泌代谢用药" },
+            { name:"硫酸氢氯吡格雷片", factory:"赛诺菲", passTime:"2026-07-28", num:45, replace:"无合适替代药", org:"阿木去乎镇卫生院", cat:"心血管系统用药" },
+            { name:"氯沙坦钾片", factory:"默沙东", passTime:"2026-08-02", num:52, replace:"有同类替代药", org:"黄泥湾镇卫生院", cat:"心血管系统用药" },
+            { name:"孟鲁司特钠片", factory:"默沙东", passTime:"2026-08-09", num:33, replace:"有同类替代药", org:"郭吴村卫生室", cat:"呼吸系统用药" },
+            { name:"阿卡波糖片", factory:"拜耳医药", passTime:"2026-08-12", num:71, replace:"有同类替代药", org:"黑力巴村卫生室", cat:"内分泌代谢用药" }
         ];
+        const CAT_COLORS = {
+            "心血管系统用药":"#1b4f8b",
+            "内分泌代谢用药":"#c8102e",
+            "呼吸系统用药":"#2b6cb0",
+            "消化系统用药":"#b8860b",
+            "抗感染用药":"#4a8fc0",
+            "解热镇痛用药":"#d98a3d",
+            "中成药":"#7a4f2a",
+            "其他用药":"#8b9bb0"
+        };
         let rejectIndex = null;
 
         function updateStats(){
@@ -249,11 +320,11 @@
                     </td>`;
                 tbody.appendChild(tr);
             });
-            updateStats(); renderMiniBars();
+            updateStats(); renderMiniBars(); refreshTemp();
         }
         function passDrug(i){
             const row = waitAuditList[i];
-            passDrugList.push({ name:row.name, factory:row.factory, passTime:"2026-08-14" });
+            passDrugList.push({ name:row.name, factory:row.factory, passTime:"2026-08-14", num:row.num||0, replace:row.replace||"", org:row.org||"", cat:row.cat||"其他用药" });
             waitAuditList.splice(i,1);
             renderAuditTable(); renderPassTable();
             toast("审核通过，「" + row.name + "」已移入下方药品目录");
@@ -302,6 +373,121 @@
             requestAnimationFrame(()=>document.querySelectorAll("#miniBars .fill").forEach(f=>f.style.width=f.dataset.w+"%"));
         }
 
+        /* ========== 全县域临时药品目录（原有目录 + 基层上报 → 自动成图） ========== */
+        function buildTempCatalog(){
+            const map = {};
+            originalCatalog.forEach(function(d){ map[d.name] = { name:d.name, cat:d.cat, inOriginal:true, reported:false, demand:0, replace:"" }; });
+            waitAuditList.concat(passDrugList).forEach(function(r){
+                if(!map[r.name]) map[r.name] = { name:r.name, cat:r.cat||"其他用药", inOriginal:false, reported:true, demand:0, replace:"" };
+                else map[r.name].reported = true;
+                map[r.name].demand += Number(r.num)||0;
+                if(!map[r.name].replace) map[r.name].replace = r.replace||"";
+            });
+            return Object.keys(map).map(function(k){ return map[k]; }).map(function(d){
+                var action;
+                if(d.inOriginal && d.reported) action = "保留·加量";
+                else if(!d.inOriginal && d.reported) action = "新增纳入";
+                else action = "维持现状";
+                d.action = action;
+                return d;
+            }).sort(function(a,b){
+                var rank = { "新增纳入":0, "保留·加量":1, "维持现状":2 };
+                return (rank[a.action]-rank[b.action]) || (b.demand-a.demand);
+            });
+        }
+        function renderTempTable(){
+            const temp = buildTempCatalog();
+            const tbody = document.querySelector("#tempTable tbody");
+            tbody.innerHTML = "";
+            temp.forEach(function(d, i){
+                let src, badge;
+                if(d.inOriginal && d.reported){ src = "原有目录＋新报"; badge = '<span class="badge warn">保留·加量</span>'; }
+                else if(!d.inOriginal && d.reported){ src = "基层新报"; badge = '<span class="badge red">新增纳入</span>'; }
+                else { src = "原有目录"; badge = '<span class="badge gray">维持现状</span>'; }
+                const demand = d.demand ? '<b style="color:var(--blue)">' + d.demand + '</b> 人' : '<span class="muted">—</span>';
+                const repl = d.reported ? (d.replace||"有同类替代药") : '<span class="muted">—</span>';
+                tbody.innerHTML += '<tr><td class="num">' + (i+1) + '</td><td><b>' + d.name + '</b></td><td>' + d.cat + '</td><td>' + src + '</td><td class="num">' + demand + '</td><td>' + repl + '</td><td>' + badge + '</td></tr>';
+            });
+        }
+        function renderDemandChart(){
+            const box = document.getElementById("demandChart");
+            const map = {};
+            waitAuditList.concat(passDrugList).forEach(function(r){
+                map[r.name] = map[r.name] || { name:r.name, demand:0, replace:"" };
+                map[r.name].demand += Number(r.num)||0;
+                map[r.name].replace = map[r.name].replace || (r.replace||"");
+            });
+            const items = Object.keys(map).map(function(k){ return map[k]; }).sort(function(a,b){ return b.demand-a.demand; });
+            if(items.length === 0){ box.innerHTML = '<div class="empty">暂无上报数据，请先在上方提交缺药上报</div>'; return; }
+            const labelW=195, gap=8, plotW=455, valW=46, rightPad=14, W=labelW+gap+plotW+valW+rightPad;
+            const rowH=30, top=10, barH=20;
+            const axisY = top + items.length*rowH + 4;
+            const H = axisY + 24;
+            const max = items[0].demand;
+            let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="各药品需求人数柱状图">';
+            const ticks = 4;
+            for(let g=0; g<=ticks; g++){
+                const x = labelW+gap + plotW*g/ticks;
+                const val = Math.round(max*g/ticks);
+                s += '<line x1="' + x + '" y1="' + top + '" x2="' + x + '" y2="' + axisY + '" stroke="#e6ebf2"/>';
+                s += '<text x="' + x + '" y="' + (axisY+15) + '" font-size="11" fill="#67707e" text-anchor="middle">' + val + '</text>';
+            }
+            s += '<line x1="' + (labelW+gap) + '" y1="' + axisY + '" x2="' + (labelW+gap+plotW) + '" y2="' + axisY + '" stroke="#c3cbd8"/>';
+            items.forEach(function(it, i){
+                const y = top + i*rowH;
+                const w = Math.max(5, it.demand/max*plotW);
+                const red = /无替代|没有替代|缺少替代|替代品/.test(it.replace||"");
+                const color = red ? "#c8102e" : "#1b4f8b";
+                s += '<text x="' + labelW + '" y="' + (y+rowH/2+4) + '" font-size="12.5" fill="#3a4a5f" text-anchor="end">' + it.name + '</text>';
+                s += '<rect x="' + (labelW+gap) + '" y="' + (y+(rowH-barH)/2) + '" width="' + w + '" height="' + barH + '" rx="2" fill="' + color + '"/>';
+                s += '<text x="' + (labelW+gap+w+6) + '" y="' + (y+rowH/2+4) + '" font-size="12" fill="' + color + '" font-weight="700">' + it.demand + '</text>';
+            });
+            s += '</svg>';
+            s += '<div class="legend"><span><i style="background:#c8102e"></i>无合适替代药（急需纳入）</span><span><i style="background:#1b4f8b"></i>有同类替代药</span></div>';
+            box.innerHTML = s;
+        }
+        function renderCatChart(){
+            const box = document.getElementById("catChart");
+            const temp = buildTempCatalog();
+            const catMap = {};
+            temp.forEach(function(d){ catMap[d.cat] = (catMap[d.cat]||0) + 1; });
+            const cats = Object.keys(catMap).map(function(c){ return { name:c, count:catMap[c], color: CAT_COLORS[c]||"#8b9bb0" }; }).sort(function(a,b){ return b.count-a.count; });
+            const total = cats.reduce(function(s,c){ return s+c.count; }, 0) || 1;
+            const size=240, cx=120, cy=104, r=70, sw=34;
+            const C = 2*Math.PI*r;
+            let offset = 0, circ = "";
+            cats.forEach(function(c){
+                const dash = c.count/total*C;
+                circ += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + c.color + '" stroke-width="' + sw + '" stroke-dasharray="' + dash + ' ' + (C-dash) + '" stroke-dashoffset="' + (-offset) + '"/>';
+                offset += dash;
+            });
+            let s = '<svg viewBox="0 0 ' + size + ' 208" role="img" aria-label="临时目录药品分类构成">';
+            s += circ;
+            s += '<text x="' + cx + '" y="' + (cy-2) + '" font-size="28" font-weight="700" fill="#1b4f8b" text-anchor="middle">' + total + '</text>';
+            s += '<text x="' + cx + '" y="' + (cy+18) + '" font-size="12" fill="#67707e" text-anchor="middle">品种总数</text>';
+            s += '</svg>';
+            let leg = '<div class="legend">';
+            cats.forEach(function(c){
+                leg += '<span><i style="background:' + c.color + '"></i>' + c.name + ' ' + c.count + '种（' + Math.round(c.count/total*100) + '%）</span>';
+            });
+            leg += '</div>';
+            box.innerHTML = s + leg;
+        }
+        function refreshTemp(){
+            const temp = buildTempCatalog();
+            const reportedNames = {};
+            waitAuditList.concat(passDrugList).forEach(function(r){ reportedNames[r.name] = 1; });
+            const newCnt = temp.filter(function(d){ return !d.inOriginal && d.reported; }).length;
+            document.getElementById("tfOriginal").textContent = originalCatalog.length;
+            document.getElementById("tfReport").textContent = Object.keys(reportedNames).length;
+            document.getElementById("tfTemp").textContent = temp.length;
+            document.getElementById("tfNew").textContent = newCnt;
+            renderTempTable();
+            renderDemandChart();
+            renderCatChart();
+        }
+        window.rebuildTempCatalog = function(){ refreshTemp(); toast("临时药品目录已重新生成"); };
+
         document.getElementById("drugForm").addEventListener("submit", function(e){
             e.preventDefault();
             const drugName = document.getElementById("drugName").value.trim();
@@ -311,10 +497,13 @@
             const drugOrg = document.getElementById("drugOrg").value;
             let replaceTip = "有同类替代药";
             if(/无替代|缺少替代|没有替代|替代品缺失/.test(drugReason)) replaceTip = "无合适替代药";
-            waitAuditList.push({ name:drugName, factory:drugFactory, num:Number(drugNum), replace:replaceTip, org:drugOrg });
+            const dbHit = (window.DRUG_DB||[]).find(d => d.name === drugName);
+            const cat = dbHit ? dbHit.cat : "其他用药";
+            const factory = drugFactory || (dbHit ? dbHit.fac : "");
+            waitAuditList.push({ name:drugName, factory:factory, num:Number(drugNum), replace:replaceTip, org:drugOrg, cat:cat });
             renderAuditTable();
             this.reset();
-            toast("提交成功！下方「在线审核」清单已实时显示你上报的药品");
+            toast("提交成功！已进入待审核清单，下方「临时药品目录」统计图已自动更新");
         });
 
         window.onload = function(){ renderAuditTable(); renderPassTable(); };
